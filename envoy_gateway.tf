@@ -1,12 +1,13 @@
 locals {
-  envoy_gateway_namespace = "envoy-gateway-system"
+  envoy_gateway_namespace  = "envoy-gateway-system"
+  envoy_proxy_name         = "nlb-proxy"
 }
 
 # Helm release for Envoy Gateway (OCI chart)
 resource "helm_release" "envoy_gateway" {
   count = var.deploy_envoy_gateway ? 1 : 0
 
-  name       = "eg"
+  name       = "envoy-gateway"
   repository = "oci://docker.io/envoyproxy"
   chart      = "gateway-helm"
   version    = var.envoy_gateway_version
@@ -27,7 +28,7 @@ resource "kubernetes_manifest" "envoy_proxy" {
     apiVersion = "gateway.envoyproxy.io/v1alpha1"
     kind       = "EnvoyProxy"
     metadata = {
-      name      = "nlb-proxy"
+      name      = local.envoy_proxy_name
       namespace = local.envoy_gateway_namespace
     }
     spec = {
@@ -66,7 +67,7 @@ resource "kubernetes_manifest" "gateway_class" {
       parametersRef = {
         group     = "gateway.envoyproxy.io"
         kind      = "EnvoyProxy"
-        name      = "nlb-proxy"
+        name      = local.envoy_proxy_name
         namespace = local.envoy_gateway_namespace
       }
     }

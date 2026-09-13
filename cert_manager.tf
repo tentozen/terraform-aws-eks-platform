@@ -45,6 +45,11 @@ resource "aws_iam_policy" "cert_manager" {
         ]
         Resource = "arn:aws:route53:::hostedzone/${var.route53_zone_id}"
       },
+      {
+        Effect   = "Allow"
+        Action   = ["route53:ListHostedZonesByName"]
+        Resource = "*"
+      },
     ]
   })
 }

@@ -22,6 +22,11 @@ variable "route53_zone_id" {
 
 # Feature flags
 
+variable "cert_manager_acme_email" {
+  description = "Email address for Let's Encrypt ACME registration."
+  type        = string
+}
+
 variable "deploy_aws_lbc" {
   description = "Deploy AWS Load Balancer Controller."
   type        = bool

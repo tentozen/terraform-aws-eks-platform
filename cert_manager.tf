@@ -87,6 +87,10 @@ resource "helm_release" "cert_manager" {
       name  = "crds.enabled"
       value = "true"
     },
+    {
+      name  = "serviceAccount.name"
+      value = local.cert_manager_service_account
+    },
   ]
 
   depends_on = [
@@ -107,6 +111,7 @@ resource "kubernetes_manifest" "cluster_issuer" {
     }
     spec = {
       acme = {
+        email  = var.cert_manager_acme_email
         server = "https://acme-v02.api.letsencrypt.org/directory"
         privateKeySecretRef = {
           name = "letsencrypt-account-key"

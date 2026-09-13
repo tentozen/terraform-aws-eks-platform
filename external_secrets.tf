@@ -39,9 +39,13 @@ resource "aws_iam_policy" "external_secrets" {
           "secretsmanager:GetSecretValue",
           "secretsmanager:DescribeSecret",
           "secretsmanager:ListSecretVersionIds",
-          "secretsmanager:ListSecrets",
         ]
         Resource = "arn:aws:secretsmanager:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:secret:*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["secretsmanager:ListSecrets"]
+        Resource = "*"
       },
     ]
   })
